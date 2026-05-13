@@ -1,0 +1,21 @@
+{
+  "name": "claude-research",
+  "owner": {
+    "name": "graham",
+    "email": "graham.annett@gmail.com"
+  },
+  "metadata": {
+    "description": "Single-plugin marketplace for the claude-research skill.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "claude-research",
+      "source": ".",
+      "description": "Run claude.ai Research queries from Claude Code via Chrome DevTools MCP, using your existing logged-in Chrome session.",
+      "version": "0.1.0",
+      "category": "research",
+      "keywords": ["claude", "research", "deep-research", "browser-automation"]
+    }
+  ]
+}
