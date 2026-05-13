@@ -71,16 +71,6 @@ claude mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest --browser-ur
 
 The dedicated profile persists across launches — log into claude.ai and/or chatgpt.com in that window once and you're done.
 
-## Playwright MCP (alternative, not required)
-
-Both skills auto-detect [Playwright MCP](https://github.com/microsoft/playwright-mcp) as a fallback if Chrome DevTools MCP isn't available. Configure it the same way — point it at the same `localhost:9222`:
-
-```bash
-claude mcp add playwright -- npx -y @playwright/mcp@latest --cdp-endpoint http://localhost:9222
-```
-
-Stay with one MCP per skill run — don't have both Chrome DevTools MCP and Playwright MCP fighting over the same browser context simultaneously.
-
 ## Troubleshooting
 
 **A fresh Chrome window opened with no logins.**
@@ -90,7 +80,7 @@ Your MCP is registered without `--autoConnect` or `--browser-url`, so it's launc
 Chrome isn't running with `--remote-debugging-port=9222`, or another Chrome is holding the profile lock on the dedicated user-data-dir. Quit Chrome instances using that dir and relaunch.
 
 **`--autoConnect` doesn't attach.**
-Confirm Chrome version is 144+, that you enabled remote debugging at `chrome://inspect/#remote-debugging`, and that no other client (e.g. a stale Playwright session) is holding the connection.
+Confirm Chrome version is 144+, that you enabled remote debugging at `chrome://inspect/#remote-debugging`, and that no other CDP client is holding the connection.
 
 **The skill says "not logged in".**
 Open the relevant site (`https://claude.ai` or `https://chatgpt.com`) in the Chrome window the MCP is attached to, and log in. The skills won't try to log in for you.

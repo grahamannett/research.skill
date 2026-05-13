@@ -5,7 +5,7 @@ description: Run a Deep Research query against chatgpt.com using the user's exis
 
 # chatgpt-research
 
-Drives the **Deep Research** feature on chatgpt.com using the user's already-authenticated Chrome session via Chrome DevTools MCP (Playwright MCP as fallback), then returns the produced report.
+Drives the **Deep Research** feature on chatgpt.com using the user's already-authenticated Chrome session via Chrome DevTools MCP, then returns the produced report.
 
 **Status:** best-guess procedure — modeled on the sister `claude-research` skill but not yet verified end-to-end against chatgpt.com's live UI. Expect to discover and adjust some specifics on the first real run.
 
@@ -19,12 +19,9 @@ Invoke when the user wants to:
 
 Do NOT use for ordinary (non-Deep-Research) chats, scraping non-chatgpt.com sites, or one-off questions the local model can answer directly.
 
-## Tool fallback order
+## Required tool
 
-1. **Primary:** Chrome DevTools MCP — tools named `mcp__chrome-devtools__*`.
-2. **Fallback:** Playwright MCP — tools named `mcp__playwright__*`, configured to connect over CDP to the same `localhost:9222`.
-
-Pick one MCP at the start and stay with it. Don't mix tool families mid-flow.
+Chrome DevTools MCP — tools named `mcp__chrome-devtools__*`. The skill stops at preflight (step 1) if this MCP isn't registered in attach mode.
 
 ## Clarification handling — default is auto-answer
 
@@ -63,14 +60,11 @@ The skill picks which of these actions to take based on the **kickoff mode** the
 
 ## Preflight (always run these first)
 
-### 1. Detect a browser MCP
+### 1. Confirm Chrome DevTools MCP is registered
 
-Look at the registered tools in this session:
-- `mcp__chrome-devtools__*` present → use Chrome DevTools MCP.
-- Otherwise `mcp__playwright__*` present → use Playwright MCP.
-- Neither → stop. Tell the user to install one (point at the repo's `docs/browser-setup.md`).
+Look at the registered tools in this session. You need `mcp__chrome-devtools__*` tools to be present. If they're missing, stop and tell the user to register Chrome DevTools MCP (point at the repo's `docs/browser-setup.md`).
 
-State which MCP you picked before doing anything else.
+State that you've confirmed the MCP is available before doing anything else.
 
 ### 2. Confirm the MCP is in *attach* mode, not *launch* mode
 
@@ -217,7 +211,7 @@ If the user provides a chatgpt.com conversation URL instead of a fresh query:
 
 ## Cross-harness notes
 
-This skill's `SKILL.md` is portable across Claude Code, OpenAI Codex CLI, and opencode — they all read the same frontmatter + body. The only difference is how the user installs the skill on each (see the repo's top-level `README.md`). The procedure above is harness-agnostic: it references MCP tool names by prefix (`mcp__chrome-devtools__*`, `mcp__playwright__*`) which each harness exposes identically.
+This skill's `SKILL.md` is portable across Claude Code, OpenAI Codex CLI, and opencode — they all read the same frontmatter + body. The only difference is how the user installs the skill on each (see the repo's top-level `README.md`). The procedure above is harness-agnostic: it references MCP tool names by prefix (`mcp__chrome-devtools__*`) which each harness exposes identically.
 
 ## What this skill is NOT for
 

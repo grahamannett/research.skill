@@ -16,7 +16,7 @@ Distributed as:
 
 Both skills require Chrome DevTools MCP configured to **attach to your real, logged-in Chrome** (not launch its own throwaway profile). One-time setup:
 
-📄 See **[`docs/browser-setup.md`](docs/browser-setup.md)** — covers Verified setup (`--autoConnect`, Chrome 144+), the `--browser-url` fallback, Playwright MCP alternative, and troubleshooting.
+📄 See **[`docs/browser-setup.md`](docs/browser-setup.md)** — covers Verified setup (`--autoConnect`, Chrome 144+), the `--browser-url` fallback, and troubleshooting.
 
 ---
 
