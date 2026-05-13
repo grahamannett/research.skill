@@ -43,6 +43,24 @@ ChatGPT's Deep Research flow has a built-in clarification step: an intermediate 
 
 When in doubt, lean toward auto-answering with "use your best judgment" — ChatGPT's defaults are usually fine, and the user can always re-run with a more specific query.
 
+## Kickoff mode — default is brief-wait
+
+After clarifications resolve (or immediately, if the original query was thorough enough to skip them), ChatGPT shows a **plan confirmation panel**: a titled summary of the research plan with three buttons — **Edit**, **Cancel**, and **Start**. The Start button displays a countdown (typically 18 seconds), after which ChatGPT auto-starts the run.
+
+The skill picks which of these actions to take based on the **kickoff mode** the caller asked for:
+
+- **immediate** — click Start as soon as the panel appears. Use for fully automated runs and loops where there's no human watching. Signals from the caller: "kick off immediately", "no wait", "fully automated", "in a loop", "unattended".
+
+- **brief-wait** (default) — wait ~12 seconds after the panel appears, then click Start. This window lets a human watching the screen intercept with Edit or Cancel if they want, while still kicking off faster than ChatGPT's own 18-second auto-start. No special phrasing required — this is what the skill does by default.
+
+- **manual** — do NOT click Start. Return to the caller with the conversation URL and a note that the plan panel is waiting for input. Use this when the caller has explicitly asked to review/edit the plan themselves. Signals: "wait for me to start", "let me review the plan", "manual kickoff", "show me the plan first", "don't start it yet".
+
+**Pairing with clarification mode:** if the caller invoked the skill with **interactive clarification mode** ("ask me before answering"), default to **manual kickoff** unless they said otherwise — those preferences pair naturally ("supervise everything" combo).
+
+**If the plan panel never appears** (ChatGPT may skip it for some query types), proceed directly to step 9 (wait for completion).
+
+**If the user's request is genuinely ambiguous about mode**, default to brief-wait.
+
 ## Preflight (always run these first)
 
 ### 1. Detect a browser MCP
@@ -143,9 +161,17 @@ If toggling Deep Research alters other composer state (model picker locks, "Web 
 ChatGPT's Deep Research flow will almost always show one or more clarification prompts before kicking off the actual run. Handle them per the **Clarification handling** section above:
 - Default: auto-answer (deriving the reply from the original user query, deferring to ChatGPT's defaults when the original is silent).
 - Override (caller said "ask me", "interactive", etc.) or genuinely-ambiguous direction-changing question: stop and surface to the user.
-- Loop until ChatGPT stops asking clarifications and the actual research starts streaming. Cap at 3 rounds.
+- Loop until ChatGPT stops asking clarifications. Cap at 3 rounds.
 
-Note in the final report (step 11) how many clarification rounds happened and a one-line summary of what you answered, so the user can audit your auto-replies.
+**Plan confirmation panel.** Once clarifications resolve, ChatGPT typically shows a plan confirmation panel with **Edit / Cancel / Start (<countdown>)** buttons. Handle per the **Kickoff mode** section above:
+
+- **immediate** — click Start as soon as the panel renders.
+- **brief-wait (default)** — wait ~12 seconds (enough for a watching human to hit Edit/Cancel), then click Start. Do NOT click before the panel is fully rendered and stable.
+- **manual** — leave the panel alone, capture the conversation URL, return to the caller with a note that the plan is awaiting their input.
+
+If you click Start and nothing happens within 5 seconds (button didn't respond, page didn't transition), re-snapshot and try once more. If the second click also fails, surface the issue rather than spamming clicks.
+
+Note in the final report (step 11) how many clarification rounds happened, what you answered, **and which kickoff mode you used**, so the user can audit both decisions.
 
 ### 9. Wait for completion
 
@@ -170,6 +196,7 @@ To the caller:
 - chatgpt.com conversation URL.
 - One-line summary of elapsed time and any non-obvious events (e.g. "Deep Research enabled; model locked to gpt-5-deep-research. Took 18 minutes.").
 - **Clarification audit** — N rounds, plus the question(s) ChatGPT asked and the reply you gave. Keep this brief (one line per round) so the user can spot if you auto-answered something they'd have answered differently.
+- **Kickoff mode** — which mode was used (`immediate` / `brief-wait` / `manual`) and the wait you applied (e.g. "brief-wait — held ~12s before Start"). If kickoff was `manual` and the run is therefore still pending, state that explicitly so the caller doesn't expect a finished report.
 
 ## Resuming an existing Deep Research conversation
 

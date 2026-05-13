@@ -121,6 +121,18 @@ If you want to be in the loop on the plan, say so in the request:
 - *"Research X on claude.ai, but **ask me before answering** any clarifying questions."*
 - *"Kick off a ChatGPT Deep Research on Y, **interactive** mode."*
 
+### Kickoff mode (chatgpt-research only)
+
+After clarifications, ChatGPT shows a plan confirmation panel with **Edit / Cancel / Start** buttons. The Start button has its own ~18-second auto-start countdown. The skill picks when to click Start based on the **kickoff mode**:
+
+- **brief-wait** (default): waits ~12 seconds — long enough for you to glance at the plan and intervene with Edit/Cancel if needed, faster than ChatGPT's own countdown.
+- **immediate**: kicks off as soon as the panel appears. Use for loops or fully unattended runs.
+  - *"Kick off a Deep Research on X **immediately** / **no wait** / **fully automated**."*
+- **manual**: doesn't click Start — returns the conversation URL and leaves the plan panel waiting for you. Use when you want to review and start it yourself.
+  - *"Show me the plan first" / "wait for me to start" / "manual kickoff"*
+
+If you also asked for interactive clarifications, manual kickoff is the natural default ("supervise everything" combo).
+
 ---
 
 ## Repo layout
