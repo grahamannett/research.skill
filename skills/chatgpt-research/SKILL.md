@@ -37,11 +37,16 @@ Pick one browser-control tool family at the start and stay with it. Do not mix t
 
 ChatGPT Deep Research may ask clarifying questions and/or show a proposed research plan before the task begins.
 
-Default behavior:
+Launch modes:
+- **Default:** unattended with a short human grace window. Answer ordinary clarifications, approve matching plans, then wait 10-15 seconds on the final **Start** screen before clicking **Start**.
+- **Immediate:** if the user says "immediate", "auto-start", "no wait", "fully automate", or similar, answer/approve and click **Start** as soon as the plan is acceptable.
+- **Interactive:** if the user says "interactive", "ask me", "let me edit", "review before start", "wait before starting", or similar, stop on the clarification/plan/start screen and ask the user what to do.
+
+Default clarification behavior:
 - Read the question or plan.
 - If ChatGPT offers a **Start research**, **Begin**, **Continue**, **Use this plan**, or similar button and the plan matches the user's original request, proceed.
 - If it asks a clarification whose answer is obvious from the user's original request, answer using the user's words and intent.
-- If the user request is silent, prefer short deference such as "Use your best judgment" only for low-impact details.
+- If the user request is silent, auto-answer with reasonable research defaults. Short deference such as "Use your best judgment" is fine for low-impact details.
 
 Stop and ask the user when:
 - They asked for interactive mode, plan review, or "ask me first".
@@ -49,6 +54,16 @@ Stop and ask the user when:
 - ChatGPT asks for a choice that would materially change the research direction.
 
 Cap auto-answered clarification rounds at 3. If ChatGPT is still asking after that, stop and summarize what happened.
+
+## Final start screen
+
+ChatGPT may show a final plan card with bullets plus **Edit**, **Cancel**, and **Start** controls. The **Start** button may include a countdown.
+
+- If the plan clearly matches the user's prompt and launch mode is default, wait 10-15 seconds so the human can edit or cancel, then click **Start**. Do not wait for the full countdown.
+- If launch mode is immediate, click **Start** as soon as the plan is visible and acceptable.
+- If launch mode is interactive, stop at this screen and tell the user the plan is ready for review/editing.
+- If the plan is visibly wrong, materially narrower than requested, or asks for a major direction choice, do not click **Start**. Ask the user how to adjust it.
+- Before clicking **Start**, capture the conversation URL so the task can be resumed if the browser session is interrupted.
 
 ## Preflight
 

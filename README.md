@@ -213,12 +213,14 @@ Once installed and the MCP is in attach mode, ask Codex in natural language:
 
 - *"Use chatgpt-research to investigate the state of Rust async runtimes."*
 - *"Run ChatGPT Deep Research on WebGPU adoption."*
+- *"Run ChatGPT Deep Research on WebGPU adoption, auto-start."*
+- *"Run ChatGPT Deep Research on WebGPU adoption, but let me edit before starting."*
 - *"Run the chatgpt-research preflight to confirm my setup."* (skips the query — just verifies browser attach + login + Deep Research availability)
 - *"Resume this ChatGPT research report: https://chatgpt.com/..."*
 
 The skill will navigate ChatGPT, enable Deep Research using the `+` menu beside the composer when available (the menu item is labeled **Deep research**), submit the query, handle the plan/clarification step, wait or return the URL for background pickup, and report the ChatGPT URL plus visible export/result state.
 
-ChatGPT Deep Research creates a proposed research plan before research begins and may ask clarifying questions. By default, `chatgpt-research` proceeds only when the plan matches your request or the answer is clearly implied by your prompt. Ask for "interactive" or "ask me before approving the plan" when you want to review that step yourself.
+ChatGPT Deep Research creates a proposed research plan before research begins and may ask clarifying questions. By default, `chatgpt-research` auto-answers ordinary clarifications, waits 10-15 seconds on the final **Start** screen so you can edit or cancel, then starts the report if the plan matches your request. Ask for "auto-start" or "immediate" to skip that grace window, or ask for "interactive" / "let me edit before starting" when you want to review the plan yourself.
 
 Completed ChatGPT Deep Research reports can be reviewed in ChatGPT's report view and downloaded in formats such as Markdown, Word, and PDF. The skill prefers ChatGPT's visible report and export controls over hidden endpoints or internal scraping.
 
