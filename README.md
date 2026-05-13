@@ -24,18 +24,18 @@ Both skills require Chrome DevTools MCP configured to **attach to your real, log
 
 ### Claude Code
 
+First, add this repo as a marketplace (one-time):
+
 ```text
 /plugin marketplace add https://github.com/grahamannett/research.skill
-/plugin install claude-research@research-skill
 ```
 
-or
+Then install whichever skill(s) you want — they're independent, so install only the one you need (or both):
 
 ```text
+/plugin install claude-research@research-skill
 /plugin install chatgpt-research@research-skill
 ```
-
-Install only the skill(s) you actually want — they're independent.
 
 > **Breaking-change note:** the marketplace was renamed from `claude-research` to `research-skill` in version 0.2.0 to reflect that it now hosts multiple plugins. If you previously ran `/plugin marketplace add` against an older version:
 >
