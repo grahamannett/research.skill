@@ -9,8 +9,15 @@ Thumbs.db
 *.swo
 *~
 
-# Claude Code — per-user local settings (commit shared settings.json if you add one)
+# Claude Code — per-user local settings and transient worktree state
+# (commit shared settings.json / skills / commands / agents under .claude/ if you add them)
 .claude/settings.local.json
+.claude/worktrees/
+
+# OpenAI Codex — per-user local config (MCP server registrations and per-tool
+# approval state). Codex writes this when MCP servers are added; it's
+# machine-specific and shouldn't be shared via the repo.
+.codex/config.toml
 
 # Node — in case helper scripts get added
 node_modules/
