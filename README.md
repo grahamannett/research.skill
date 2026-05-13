@@ -137,6 +137,17 @@ Once installed and the MCP is in attach mode, ask Claude Code in natural languag
 
 The skill will navigate claude.ai, enable Research mode via the composer's `+ → Research` menu, submit the query, wait for completion (5–30+ min), and return the report text plus the claude.ai conversation URL.
 
+### Clarification questions
+
+claude.ai's Research mode usually asks 1–3 follow-up questions (scope, time period, depth, etc.) before kicking off the real run. By **default the skill auto-answers** those — drawing the reply from your original query, deferring to claude.ai's defaults when your query is silent — so the run starts unattended.
+
+The skill returns a short audit of those auto-replies so you can see what it answered on your behalf.
+
+If you want to be in the loop on the plan, say so in the request:
+
+- *"Research X on claude.ai, but **ask me before answering** any clarifying questions."*
+- *"Kick off a research query on Y, **interactive** mode."*
+
 ---
 
 ## Repo layout

@@ -24,6 +24,23 @@ Do NOT use for ordinary (non-Research) chats, scraping non-claude.ai sites, or o
 
 Pick one MCP at the start and stay with it. Don't mix tool families mid-flow.
 
+## Clarification handling — default is auto-answer
+
+claude.ai's Research mode almost always asks 1–3 follow-up questions before kicking off the actual deep-research run (scope, time period, depth, regions, etc.). The whole point of this skill is to fire-and-forget a research run from Claude Code, so **the default is to auto-answer those clarifications** and let the run start unattended.
+
+**Auto-answer rules:**
+- Read what claude.ai is asking.
+- Reply with the most natural answer the **original user query** implies. Use the original query's words and intent — don't introduce scope, constraints, or preferences the user didn't ask for.
+- When the original query is silent on a point, **defer to claude.ai's judgment**. Short answers like "No preference — use your best judgment", "Whatever you think is most useful", or "Up to you, just proceed" are fine.
+- If claude.ai shows a "Start research" / "Skip clarifications" / "Use defaults" button, prefer clicking that over composing a reply.
+- Loop: if claude.ai asks again after your reply, answer again. Hard cap at **3 clarification rounds** — if it's still asking after 3 replies, something is off; bail to the user with what you saw.
+
+**Bail out of auto-answer and surface the question to the user** when:
+- The user invoked the skill with explicit "ask me", "interactive", "wait for my input", or "check with me on the plan" framing.
+- The clarification asks for a fact that's genuinely not derivable from the original query AND would materially change the research direction (e.g., "Which of these three companies should I focus on?" when the user didn't name any). Picking arbitrarily here would silently change what the user gets back.
+
+When in doubt, lean toward auto-answering with "use your best judgment" — claude.ai's defaults are usually fine, and the user can always re-run with a more specific query.
+
 ## Preflight (always run these first)
 
 ### 1. Detect a browser MCP
@@ -108,10 +125,12 @@ Close the menu (Escape or click outside) before composing.
 - Type the user's query **verbatim**. Do not paraphrase, expand, or "improve" it.
 - Submit (Enter, or the send button — whichever is exposed by the accessibility tree).
 
-claude.ai's Research mode may show an intermediate "Plan your research" / clarification step before kicking off the actual search. If that happens:
-- Read what claude.ai is asking.
-- If the user gave a specific query without clarifying details, accept claude.ai's default plan (usually a "Start research" / confirm button).
-- If the clarification needs the user's input, stop and surface the question to the user rather than guessing.
+claude.ai's Research mode will almost always show one or more clarification prompts before kicking off the actual run. Handle them per the **Clarification handling** section above:
+- Default: auto-answer (deriving the reply from the original user query, deferring to claude.ai's defaults when the original is silent).
+- Override (caller said "ask me", "interactive", etc.) or genuinely-ambiguous direction-changing question: stop and surface to the user.
+- Loop until claude.ai stops asking clarifications and the actual research starts streaming. Cap at 3 rounds.
+
+Note in the final report (step 11) how many clarification rounds happened and a one-line summary of what you answered, so the user can audit your auto-replies.
 
 ### 9. Wait for completion
 
@@ -133,6 +152,7 @@ To the caller:
 - Full report text.
 - claude.ai conversation URL.
 - One-line summary of elapsed time and any non-obvious events (e.g. "Research mode was enabled; Web search was deactivated automatically. Took 12 minutes.").
+- **Clarification audit** — N rounds, plus the question(s) claude.ai asked and the reply you gave. Keep this brief (one line per round) so the user can spot if you auto-answered something they'd have answered differently.
 
 ## Resuming an existing Research conversation
 
