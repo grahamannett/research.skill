@@ -1,21 +1,29 @@
 {
-  "name": "claude-research",
+  "name": "research-skill",
   "owner": {
     "name": "graham",
     "email": "graham.annett@gmail.com"
   },
   "metadata": {
-    "description": "Single-plugin marketplace for the claude-research skill.",
-    "version": "0.1.0"
+    "description": "Multi-plugin marketplace for research-driving skills (claude.ai Research, chatgpt.com Deep Research) that attach to a logged-in Chrome via Chrome DevTools MCP.",
+    "version": "0.2.0"
   },
   "plugins": [
     {
       "name": "claude-research",
-      "source": ".",
+      "source": "./claude-research",
       "description": "Run claude.ai Research queries from Claude Code via Chrome DevTools MCP, using your existing logged-in Chrome session.",
       "version": "0.1.0",
       "category": "research",
       "keywords": ["claude", "research", "deep-research", "browser-automation"]
+    },
+    {
+      "name": "chatgpt-research",
+      "source": "./chatgpt-research",
+      "description": "Run chatgpt.com Deep Research queries via Chrome DevTools MCP, using your existing logged-in ChatGPT session. Portable SKILL.md format also usable from OpenAI Codex CLI and opencode.",
+      "version": "0.1.0",
+      "category": "research",
+      "keywords": ["chatgpt", "openai", "deep-research", "browser-automation"]
     }
   ]
 }
