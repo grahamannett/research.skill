@@ -1,144 +1,137 @@
-# claude-research
+# research.skill
 
-A [Claude Code](https://docs.claude.com/en/docs/claude-code) skill that runs a **Research** query on [claude.ai](https://claude.ai) using a logged-in browser session via [Chrome DevTools MCP](https://github.com/ChromeDevTools/chrome-devtools-mcp), then returns the report back into your Claude Code conversation.
+Research-driving skills for AI coding agents. Both skills attach to your real, logged-in Chrome via [Chrome DevTools MCP](https://github.com/ChromeDevTools/chrome-devtools-mcp) and drive a research feature on a Claude or OpenAI website without you having to context-switch out of your terminal.
 
-Distributed as a Claude Code plugin. This repo is a single-plugin marketplace, so installation is two `/plugin` commands.
+| Skill              | Target site   | Default harness         | Status                                                |
+|--------------------|---------------|-------------------------|-------------------------------------------------------|
+| `claude-research`  | claude.ai     | Claude Code             | Stable — verified end-to-end                          |
+| `chatgpt-research` | chatgpt.com   | OpenAI Codex CLI, opencode (also Claude Code) | Best-guess — written but not yet verified live |
 
-## Verified setup (macOS, Chrome 144+)
+Distributed as:
 
-The one-shot known-working configuration:
+- **Claude Code:** a multi-plugin marketplace (`research-skill`) exposing each skill as a separately-installable plugin.
+- **Codex CLI / opencode:** the `SKILL.md` files are portable — symlink the skill dir of your choice into the harness's skills path.
 
-```bash
-claude mcp remove chrome-devtools 2>/dev/null
-claude mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest --autoConnect
-```
+## Shared setup
 
-Then in your normal Chrome, open `chrome://inspect/#remote-debugging` once and enable remote debugging. The MCP will attach to your real, logged-in Chrome on the next session — no separate Chrome process, no separate profile, no relaunch dance. This is the recommended path; the longer setup section below covers the `--browser-url` fallback for Chrome <144 or other edge cases.
+Both skills require Chrome DevTools MCP configured to **attach to your real, logged-in Chrome** (not launch its own throwaway profile). One-time setup:
 
----
-
-## How it works
-
-1. You set up Chrome DevTools MCP to **attach to a running Chrome** (not launch its own).
-2. You log into claude.ai in that Chrome once. The session persists in that profile.
-3. From inside Claude Code, you trigger the skill. It attaches via the MCP, navigates to claude.ai, and verifies you're logged in.
-
-No API keys, no separate auth — the skill uses your real claude.ai session.
+📄 See **[`docs/browser-setup.md`](docs/browser-setup.md)** — covers Verified setup (`--autoConnect`, Chrome 144+), the `--browser-url` fallback, and troubleshooting.
 
 ---
 
-## Prerequisites
+## Install
 
-### 1. Chrome DevTools MCP, configured to *attach*
+### Claude Code
 
-By default, `chrome-devtools-mcp` launches its own isolated Chrome with a throwaway profile at `~/.cache/chrome-devtools-mcp/chrome-profile-stable` — same Chrome binary as your normal one, but no logins. That's not what you want. You need to register it with one of these flags so it attaches to your real Chrome instead.
-
-Pick **one** path:
-
-#### Option A — `--autoConnect` (Chrome 144+, recommended)
-
-Check your Chrome version at `Chrome → About Google Chrome`. If it's 144 or newer:
-
-```bash
-claude mcp remove chrome-devtools 2>/dev/null
-claude mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest --autoConnect
-```
-
-Then in your normal Chrome, open `chrome://inspect/#remote-debugging` and enable remote debugging once. From the [official docs](https://github.com/ChromeDevTools/chrome-devtools-mcp): *"best for sharing state between manual and agent-driven testing."*
-
-#### Option B — `--browser-url` (any Chrome version)
-
-You launch Chrome with `--remote-debugging-port=9222` yourself; the MCP connects to that port.
-
-Chrome refuses `--remote-debugging-port` against your default profile dir (per its own security policy), so use a dedicated profile dir. Quit any Chrome using that profile first, then:
-
-```bash
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
-  --remote-debugging-port=9222 \
-  --user-data-dir="$HOME/.config/chrome-research-profile"
-```
-
-Linux:
-
-```bash
-google-chrome --remote-debugging-port=9222 --user-data-dir="$HOME/.config/chrome-research-profile"
-```
-
-Verify it's reachable:
-
-```bash
-curl -s http://localhost:9222/json/version | head -1
-```
-
-Then register the MCP to attach to it:
-
-```bash
-claude mcp remove chrome-devtools 2>/dev/null
-claude mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest --browser-url=http://127.0.0.1:9222
-```
-
-The dedicated profile persists across launches — you log into claude.ai in that window once and you're done.
-
-### 2. Logged into claude.ai
-
-In whichever Chrome window the MCP will attach to (your normal one for Option A, the dedicated `--remote-debugging-port` window for Option B), go to [https://claude.ai](https://claude.ai) and log in if you aren't already.
-
-### Playwright MCP (alternative, not required)
-
-The skill auto-detects [Playwright MCP](https://github.com/microsoft/playwright-mcp) as a fallback if Chrome DevTools MCP isn't available. Configure it the same way — point it at the same `localhost:9222`:
-
-```bash
-claude mcp add playwright -- npx -y @playwright/mcp@latest --cdp-endpoint http://localhost:9222
-```
-
----
-
-## Install the plugin
-
-From inside Claude Code:
+First, add this repo as a marketplace (one-time):
 
 ```text
 /plugin marketplace add https://github.com/grahamannett/research.skill
-/plugin install claude-research@claude-research
 ```
 
-The first command registers this repo as a marketplace. The second installs the plugin from it.
+Then install whichever skill(s) you want — they're independent, so install only the one you need (or both):
+
+```text
+/plugin install claude-research@research-skill
+/plugin install chatgpt-research@research-skill
+```
+
+> **Breaking-change note:** the marketplace was renamed from `claude-research` to `research-skill` in version 0.2.0 to reflect that it now hosts multiple plugins. If you previously ran `/plugin marketplace add` against an older version:
+>
+> ```text
+> /plugin marketplace remove claude-research
+> /plugin marketplace add https://github.com/grahamannett/research.skill
+> /plugin install claude-research@research-skill
+> ```
 
 To update:
 
 ```text
-/plugin marketplace update claude-research
-/plugin install claude-research@claude-research
+/plugin marketplace update research-skill
 ```
 
 To uninstall:
 
 ```text
 /plugin uninstall claude-research
+/plugin uninstall chatgpt-research
 ```
+
+### OpenAI Codex CLI
+
+Clone the repo somewhere stable, then symlink the skill dir(s) you want into `~/.agents/skills/`:
+
+```bash
+git clone https://github.com/grahamannett/research.skill ~/code/research.skill
+ln -s ~/code/research.skill/chatgpt-research/skills/chatgpt-research ~/.agents/skills/chatgpt-research
+# (or claude-research/skills/claude-research, or both)
+```
+
+Copying instead of symlinking is fine if you'd rather not chase updates.
+
+### opencode
+
+Same idea, different path:
+
+```bash
+git clone https://github.com/grahamannett/research.skill ~/code/research.skill
+ln -s ~/code/research.skill/chatgpt-research/skills/chatgpt-research ~/.config/opencode/skills/chatgpt-research
+```
+
+opencode also reads `.claude/skills/` directories, so a Claude-Code-style install would work too.
 
 ---
 
 ## Usage
 
-Once installed and the MCP is in attach mode, ask Claude Code in natural language:
+### claude-research
+
+Once installed and your MCP is in attach mode, ask in natural language:
 
 - *"Use claude-research to investigate the state of Rust async runtimes."*
 - *"Kick off a deep research query on claude.ai about WebGPU adoption."*
-- *"Run the claude-research preflight to confirm my setup."* (skips the query — just verifies MCP attach + login)
+- *"Run the claude-research preflight to confirm my setup."* (skips the query — just verifies MCP attach + claude.ai login)
 
-The skill will navigate claude.ai, enable Research mode via the composer's `+ → Research` menu, submit the query, wait for completion (5–30+ min), and return the report text plus the claude.ai conversation URL.
+The skill navigates claude.ai, enables Research via the composer's `+ → Research` menu, submits the query, auto-answers clarifications (see below), waits for completion (5–30+ min), and returns the report text plus the claude.ai conversation URL.
 
-### Clarification questions
+### chatgpt-research
 
-claude.ai's Research mode usually asks 1–3 follow-up questions (scope, time period, depth, etc.) before kicking off the real run. By **default the skill auto-answers** those — drawing the reply from your original query, deferring to claude.ai's defaults when your query is silent — so the run starts unattended.
+Same shape, different target:
 
-The skill returns a short audit of those auto-replies so you can see what it answered on your behalf.
+- *"Use chatgpt-research to investigate WebGPU adoption."*
+- *"Kick off a ChatGPT Deep Research query on the state of Rust async runtimes."*
+- *"Run the chatgpt-research preflight to confirm my setup."*
+
+The skill navigates chatgpt.com, enables Deep Research from the composer, submits, auto-answers, waits 5–30+ min, returns the report (Markdown when available) plus the conversation URL.
+
+**ChatGPT-specific caveats:**
+
+- Requires a ChatGPT account with Deep Research access (Plus / Pro / Team / Enterprise / Edu — Free gets a very limited lightweight variant). The skill surfaces tier-gate messages verbatim and stops, rather than silently downgrading.
+- chatgpt.com is Cloudflare-protected. Attach mode (real-session cookies + fingerprint) is the mitigation, and is usually enough. If a Cloudflare challenge appears, the skill stops and asks you to complete it manually in your Chrome window — it will NOT click through the challenge automatically (doing so is the exact pattern Cloudflare detects, and repeated attempts can escalate to a hard block).
+
+### Clarification questions (both skills)
+
+Both target services' research flows ask 1–3 follow-up questions (scope, time period, depth, etc.) before kicking off the real run. **By default, the skills auto-answer** those — drawing the reply from your original query, deferring to the service's defaults when your query is silent — so the run starts unattended.
+
+Each skill returns a short audit of those auto-replies so you can see what it answered on your behalf.
 
 If you want to be in the loop on the plan, say so in the request:
 
 - *"Research X on claude.ai, but **ask me before answering** any clarifying questions."*
-- *"Kick off a research query on Y, **interactive** mode."*
+- *"Kick off a ChatGPT Deep Research on Y, **interactive** mode."*
+
+### Kickoff mode (chatgpt-research only)
+
+After clarifications, ChatGPT shows a plan confirmation panel with **Edit / Cancel / Start** buttons. The Start button has its own ~18-second auto-start countdown. The skill picks when to click Start based on the **kickoff mode**:
+
+- **brief-wait** (default): waits ~12 seconds — long enough for you to glance at the plan and intervene with Edit/Cancel if needed, faster than ChatGPT's own countdown.
+- **immediate**: kicks off as soon as the panel appears. Use for loops or fully unattended runs.
+  - *"Kick off a Deep Research on X **immediately** / **no wait** / **fully automated**."*
+- **manual**: doesn't click Start — returns the conversation URL and leaves the plan panel waiting for you. Use when you want to review and start it yourself.
+  - *"Show me the plan first" / "wait for me to start" / "manual kickoff"*
+
+If you also asked for interactive clarifications, manual kickoff is the natural default ("supervise everything" combo).
 
 ---
 
@@ -147,33 +140,26 @@ If you want to be in the loop on the plan, say so in the request:
 ```
 research.skill/
 ├── .claude-plugin/
-│   ├── plugin.json          # Plugin manifest
-│   └── marketplace.json     # Marketplace manifest (so this repo is installable as-is)
-├── skills/
-│   └── claude-research/
-│       └── SKILL.md         # The skill's prompt + procedure
+│   └── marketplace.json              # Multi-plugin marketplace manifest
+├── claude-research/                  # Plugin: claude-research
+│   ├── .claude-plugin/
+│   │   └── plugin.json
+│   └── skills/
+│       └── claude-research/
+│           └── SKILL.md              # The skill itself (portable across harnesses)
+├── chatgpt-research/                 # Plugin: chatgpt-research
+│   ├── .claude-plugin/
+│   │   └── plugin.json
+│   └── skills/
+│       └── chatgpt-research/
+│           └── SKILL.md
+├── docs/
+│   └── browser-setup.md              # Shared Chrome DevTools MCP setup
 ├── README.md
 └── .gitignore
 ```
 
----
-
-## Troubleshooting
-
-**A fresh Chrome window opened with no logins.**
-Your MCP is registered without `--autoConnect` or `--browser-url`, so it's launching its own isolated Chrome with a throwaway profile. Re-register it with one of the flags above. Confirm with `claude mcp list`.
-
-**`curl http://localhost:9222/json/version` returns nothing.**
-Chrome isn't running with `--remote-debugging-port=9222`, or another Chrome is holding the profile lock on the dedicated user-data-dir. Quit Chrome instances using that dir and relaunch.
-
-**`--autoConnect` doesn't attach.**
-Confirm Chrome version is 144+, that you enabled remote debugging at `chrome://inspect/#remote-debugging`, and that no other client (e.g. a stale Playwright session) is holding the connection.
-
-**The skill says "not logged in".**
-Open `https://claude.ai` in the Chrome window the MCP is attached to, and log in. The skill won't try to log in for you.
-
-**The MCP isn't being detected.**
-Run `/mcp` inside Claude Code to confirm the server is connected. If the status shows "failed", check stderr — usually a Node / `npx` version issue.
+The double-nested `<plugin-name>/skills/<skill-name>/` path is Claude Code's plugin convention. Codex / opencode users symlink directly to the inner `skills/<skill-name>/` directory and ignore the outer plugin wrapper.
 
 ---
 

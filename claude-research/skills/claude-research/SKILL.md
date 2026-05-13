@@ -5,7 +5,7 @@ description: Run a research or deep-research query against claude.ai using the u
 
 # claude-research
 
-Drives the **Research** feature on claude.ai using the user's already-authenticated Chrome session via Chrome DevTools MCP (Playwright MCP as fallback), then returns the produced report.
+Drives the **Research** feature on claude.ai using the user's already-authenticated Chrome session via Chrome DevTools MCP, then returns the produced report.
 
 ## When to use
 
@@ -17,12 +17,9 @@ Invoke when the user wants to:
 
 Do NOT use for ordinary (non-Research) chats, scraping non-claude.ai sites, or one-off questions the local model can answer directly.
 
-## Tool fallback order
+## Required tool
 
-1. **Primary:** Chrome DevTools MCP — tools named `mcp__chrome-devtools__*`.
-2. **Fallback:** Playwright MCP — tools named `mcp__playwright__*`, configured to connect over CDP.
-
-Pick one MCP at the start and stay with it. Don't mix tool families mid-flow.
+Chrome DevTools MCP — tools named `mcp__chrome-devtools__*`. The skill stops at preflight (step 1) if this MCP isn't registered in attach mode.
 
 ## Clarification handling — default is auto-answer
 
@@ -43,14 +40,11 @@ When in doubt, lean toward auto-answering with "use your best judgment" — clau
 
 ## Preflight (always run these first)
 
-### 1. Detect a browser MCP
+### 1. Confirm Chrome DevTools MCP is registered
 
-Look at the registered tools in this session:
-- `mcp__chrome-devtools__*` present → use Chrome DevTools MCP.
-- Otherwise `mcp__playwright__*` present → use Playwright MCP.
-- Neither → stop. Tell the user to install one (point at `README.md`).
+Look at the registered tools in this session. You need `mcp__chrome-devtools__*` tools to be present. If they're missing, stop and tell the user to register Chrome DevTools MCP (point at `README.md`). Don't continue.
 
-State which MCP you picked before doing anything else.
+State that you've confirmed the MCP is available before doing anything else.
 
 ### 2. Confirm the MCP is in *attach* mode, not *launch* mode
 

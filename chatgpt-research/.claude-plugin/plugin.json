@@ -1,0 +1,13 @@
+{
+  "name": "chatgpt-research",
+  "version": "0.1.0",
+  "description": "Run chatgpt.com Deep Research queries via Chrome DevTools MCP. Attaches to your logged-in ChatGPT session, enables Deep Research from the composer, auto-answers clarification prompts, waits for completion, and returns the report text plus conversation URL. SKILL.md format is portable to OpenAI Codex CLI and opencode.",
+  "author": {
+    "name": "Graham Annett",
+    "email": "graham.annett@gmail.com"
+  },
+  "homepage": "https://github.com/grahamannett/research.skill",
+  "repository": "https://github.com/grahamannett/research.skill",
+  "license": "MIT",
+  "keywords": ["chatgpt", "openai", "deep-research", "browser-automation", "chrome-devtools-mcp", "codex", "opencode"]
+}
