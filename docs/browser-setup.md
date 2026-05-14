@@ -46,4 +46,4 @@ Same MCP, different registration:
 - **A fresh Chrome window with no logins opened.** MCP is in launch mode — re-register with `--autoConnect` or `--browser-url`. Confirm via `claude mcp list`.
 - **`curl http://localhost:9222/json/version` returns nothing.** Chrome isn't running with `--remote-debugging-port=9222`, or another Chrome holds the profile lock. Quit and relaunch.
 - **Skill says "not logged in".** Open the site in the attached Chrome window and log in. The skills won't log in for you.
-- **Skill says "Cloudflare challenge"** (chatgpt-research). Complete the Turnstile in your Chrome window, then re-invoke. Don't keep retrying into a challenge — that can escalate to a temporary IP block.
+- **Skill says "Cloudflare challenge"** (`chatgpt:research`). Complete the Turnstile in your Chrome window, then re-invoke. Don't keep retrying into a challenge — that can escalate to a temporary IP block.

@@ -1,9 +1,9 @@
 ---
-name: claude-research
+name: research
 description: Run a research or deep-research query against claude.ai using the user's existing logged-in browser session via Chrome DevTools MCP. Navigates claude.ai, enables Research mode from the composer's "+" menu, submits the query, waits for completion, and returns the report text plus the conversation URL. Use when the user asks to run a claude.ai Research query, fetch a deep-research report, resume a prior Research conversation, or just preflight the MCP/Chrome/login setup.
 ---
 
-# claude-research
+# Claude.ai Research
 
 Drives the **Research** feature on claude.ai using the user's already-authenticated Chrome session via Chrome DevTools MCP, then returns the produced report.
 
@@ -23,7 +23,7 @@ Chrome DevTools MCP — tools named `mcp__chrome-devtools__*`. The skill stops a
 
 ## Clarification handling — default is auto-answer
 
-claude.ai's Research mode almost always asks 1–3 follow-up questions before kicking off the actual deep-research run (scope, time period, depth, regions, etc.). The whole point of this skill is to fire-and-forget a research run from Claude Code, so **the default is to auto-answer those clarifications** and let the run start unattended.
+claude.ai's Research mode asks 1–3 follow-up questions (scope, timeframe, depth) before kicking off. **Default: auto-answer so the run is fire-and-forget.**
 
 **Auto-answer rules:**
 - Read what claude.ai is asking.
@@ -42,20 +42,15 @@ When in doubt, lean toward auto-answering with "use your best judgment" — clau
 
 ### 1. Confirm Chrome DevTools MCP is registered
 
-Look at the registered tools in this session. You need `mcp__chrome-devtools__*` tools to be present. If they're missing, stop and tell the user to register Chrome DevTools MCP (point at `README.md`). Don't continue.
+Look at the registered tools in this session. You need `mcp__chrome-devtools__*` tools to be present. If they're missing, stop and tell the user to register Chrome DevTools MCP (point at `docs/browser-setup.md`). Don't continue.
 
 State that you've confirmed the MCP is available before doing anything else.
 
 ### 2. Confirm the MCP is in *attach* mode, not *launch* mode
 
-`chrome-devtools-mcp` has two modes:
-- **Attach mode** — registered with `--autoConnect` (Chrome 144+) or `--browser-url=http://127.0.0.1:9222`. Drives the user's real, logged-in Chrome.
-- **Launch mode** (default) — spins up its own Chrome with a throwaway profile at `~/.cache/chrome-devtools-mcp/chrome-profile-stable`. No logins. **Wrong for this skill.**
+The MCP must be in **attach mode** (`--autoConnect` or `--browser-url`, driving the user's real Chrome), not **launch mode** (its own Chrome with a throwaway profile at `~/.cache/chrome-devtools-mcp/chrome-profile-stable`, no logins). See `docs/browser-setup.md`.
 
-Sanity-check which mode is active before navigating to claude.ai. The simplest signal: navigate to `chrome://version` and read `Profile Path` from the accessibility snapshot. If it looks like the throwaway cache dir, stop and tell the user:
-- The MCP is in launch mode.
-- Point them at the README's "Verified setup" section (`--autoConnect`) or "Option B — `--browser-url`".
-- Suggest `claude mcp list` to confirm current flags.
+Sanity-check before navigating to claude.ai: navigate to `chrome://version` and read `Profile Path` from the accessibility snapshot. If it looks like the throwaway cache dir, stop and point the user at `docs/browser-setup.md`; suggest `claude mcp list` to confirm current flags.
 
 Do NOT log in inside the throwaway profile — that defeats the point.
 
@@ -157,11 +152,11 @@ If the user provides a claude.ai conversation URL instead of a fresh query:
 
 ## Failure modes — surface, don't paper over
 
-- **MCP in launch mode** → stop at step 2; point at README's Verified setup section.
+- **MCP in launch mode** → stop at step 2; point at `docs/browser-setup.md`.
 - **Not logged in** → stop at step 4; ask the user to log in.
 - **`+` button or Research entry not found** → stop at step 6/7; report what menu entries you *did* see.
 - **Account lacks Research access** → stop; surface claude.ai's exact message.
-- **Chrome not reachable on 9222** (Option B users only) → stop; point at README's launch command.
+- **Chrome not reachable on 9222** (Option B users only) → stop; point at `docs/browser-setup.md`.
 - **Query rejected** (rate limit, content policy) → surface claude.ai's exact message. Don't retry silently.
 
 ## What this skill is NOT for

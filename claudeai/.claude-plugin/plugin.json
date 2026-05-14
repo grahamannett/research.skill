@@ -1,6 +1,6 @@
 {
-  "name": "claude-research",
-  "version": "0.1.0",
+  "name": "claudeai",
+  "version": "0.2.0",
   "description": "Run claude.ai Research queries from Claude Code via Chrome DevTools MCP. Attaches to your logged-in Chrome (via --autoConnect or --browser-url), navigates claude.ai, enables Research from the composer + menu, waits for completion, and returns the report text plus conversation URL.",
   "author": {
     "name": "Graham Annett",

@@ -10,18 +10,18 @@
   },
   "plugins": [
     {
-      "name": "claude-research",
-      "source": "./claude-research",
+      "name": "claudeai",
+      "source": "./claudeai",
       "description": "Run claude.ai Research queries from Claude Code via Chrome DevTools MCP, using your existing logged-in Chrome session.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "category": "research",
       "keywords": ["claude", "research", "deep-research", "browser-automation"]
     },
     {
-      "name": "chatgpt-research",
-      "source": "./chatgpt-research",
+      "name": "chatgpt",
+      "source": "./chatgpt",
       "description": "Run chatgpt.com Deep Research queries via Chrome DevTools MCP, using your existing logged-in ChatGPT session. Portable SKILL.md format also usable from OpenAI Codex CLI and opencode.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "category": "research",
       "keywords": ["chatgpt", "openai", "deep-research", "browser-automation"]
     }
