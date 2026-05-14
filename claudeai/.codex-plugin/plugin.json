@@ -1,0 +1,17 @@
+{
+  "name": "claudeai",
+  "version": "0.2.0",
+  "description": "Run claude.ai Research queries from Codex CLI via Chrome DevTools MCP. Attaches to your logged-in Chrome (via --autoConnect or --browser-url), navigates claude.ai, enables Research from the composer + menu, waits for completion, and returns the report text plus conversation URL.",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Claude.ai Research"
+  },
+  "author": {
+    "name": "Graham Annett",
+    "email": "graham.annett@gmail.com"
+  },
+  "homepage": "https://github.com/grahamannett/research.skill",
+  "repository": "https://github.com/grahamannett/research.skill",
+  "license": "MIT",
+  "keywords": ["claude", "research", "deep-research", "browser-automation", "chrome-devtools-mcp"]
+}

@@ -24,16 +24,24 @@ Update: `/plugin marketplace update research-skill`. Uninstall: `/plugin uninsta
 ### OpenAI Codex CLI
 
 ```bash
-git clone https://github.com/grahamannett/research.skill ~/code/research.skill
-ln -s ~/code/research.skill/claudeai ~/.codex/skills/claudeai
-ln -s ~/code/research.skill/chatgpt  ~/.codex/skills/chatgpt
+codex plugin marketplace add grahamannett/research.skill
+codex
+# in the Codex prompt:
+/plugins
+# then browse to "claudeai" and "chatgpt" and Install plugin on each
 ```
 
-If your Codex version doesn't pick those up, try the cross-tool path `~/.agents/skills/` instead (same symlink shape).
+This registers the repo's `.agents/plugins/marketplace.json` as a marketplace source and installs both plugins. Skills land in Codex's plugin store, invokable as `@claudeai` / `@chatgpt` (or their bundled `research` skill).
 
 ### opencode
 
-Same as Codex, but symlink into `~/.config/opencode/skills/` (or `.claude/skills/`).
+Symlink the skill folders into `~/.config/opencode/skills/` (or `.claude/skills/`):
+
+```bash
+git clone https://github.com/grahamannett/research.skill ~/code/research.skill
+ln -s ~/code/research.skill/claudeai/skills/research ~/.config/opencode/skills/claudeai-research
+ln -s ~/code/research.skill/chatgpt/skills/research  ~/.config/opencode/skills/chatgpt-research
+```
 
 ## Usage
 

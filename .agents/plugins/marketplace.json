@@ -1,0 +1,29 @@
+{
+  "name": "research-skill",
+  "owner": {
+    "name": "graham",
+    "email": "graham.annett@gmail.com"
+  },
+  "metadata": {
+    "description": "Multi-plugin marketplace for research-driving skills (claude.ai Research, chatgpt.com Deep Research) that attach to a logged-in Chrome via Chrome DevTools MCP.",
+    "version": "0.2.0"
+  },
+  "plugins": [
+    {
+      "name": "claudeai",
+      "source": "./claudeai",
+      "description": "Run claude.ai Research queries from Codex CLI via Chrome DevTools MCP, using your existing logged-in Chrome session.",
+      "version": "0.2.0",
+      "category": "research",
+      "keywords": ["claude", "research", "deep-research", "browser-automation"]
+    },
+    {
+      "name": "chatgpt",
+      "source": "./chatgpt",
+      "description": "Run chatgpt.com Deep Research queries via Chrome DevTools MCP, using your existing logged-in ChatGPT session.",
+      "version": "0.2.0",
+      "category": "research",
+      "keywords": ["chatgpt", "openai", "deep-research", "browser-automation"]
+    }
+  ]
+}
